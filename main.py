@@ -15,13 +15,13 @@ def weather(update, context):
     city_name = response['name'] + ', ' + response['sys']['country']
 
     temperature = response['main']['temp'] - 273.15
-
     wind = response['wind']['speed']
+    weather = response['weather'][0]['description']
 
     temperature_output = '{:.0f}'.format(temperature) + '° C'
     wind_output = str(wind) + ' м/с'
 
-    message = 'Погода в ' + city_name + ':\n' + 'Температура ' + temperature_output + '\n' + 'Ветер ' + wind_output
+    message = 'Погода в ' + city_name + ':\n\n' + 'Температура ' + temperature_output + '\n' + 'Ветер ' + wind_output + '\n' + weather.capitalize()
 
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=message)
