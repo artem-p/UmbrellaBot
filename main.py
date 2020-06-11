@@ -6,7 +6,7 @@ from secret import TOKEN, WEATHER_API_KEY
 
 def weather(update, context):
     CITY = 'Saint Petersburg, ru'
-    URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + CITY + '&appid=' + WEATHER_API_KEY
+    URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + CITY + '&lang=ru&appid=' + WEATHER_API_KEY
     
     request = requests.get(URL)
 
