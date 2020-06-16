@@ -32,7 +32,9 @@ def weather(update, context):
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=message)
 
-    
+
+def forecast(update, context):
+    update.message.reply_text("Прогноз погоды для ")        
 
 
 def hello(update, context):
@@ -57,6 +59,7 @@ def main():
     
     dispatcher.add_handler(CommandHandler('hello', hello))
     dispatcher.add_handler(CommandHandler('weather', weather))
+    dispatcher.add_handler(CommandHandler('forecast', forecast))
     dispatcher.add_handler(CommandHandler('city', city))
 
     updater.start_polling()
