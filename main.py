@@ -34,11 +34,23 @@ def hello(update, context):
     context.bot.send_message(chat_id=chat_id, text='Привет')
 
 
+def city(update, context):
+    city = " ".join(context.args)
+
+    if city:
+        update.message.reply_text("Я буду показывать погоду для " + city)
+    else:
+        update.message.reply_text("Введите город после команды, например, /city Лондон")
+
+
 def main():
     updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
+    
     dispatcher.add_handler(CommandHandler('hello', hello))
     dispatcher.add_handler(CommandHandler('weather', weather))
+    dispatcher.add_handler(CommandHandler('city', city))
+
     updater.start_polling()
     updater.idle()
 
