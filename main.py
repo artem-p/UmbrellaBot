@@ -5,8 +5,14 @@ from secret import TOKEN, WEATHER_API_KEY
 
 
 def weather(update, context):
-    CITY = 'Saint Petersburg, ru'
-    URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + CITY + '&lang=ru&appid=' + WEATHER_API_KEY
+    DEFAULT_CITY = 'Saint Petersburg, ru'
+
+    try:
+        city = context.user_data['city']
+    except KeyError:
+        city = DEFAULT_CITY
+
+    URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&lang=ru&appid=' + WEATHER_API_KEY
     
     request = requests.get(URL)
 
@@ -38,6 +44,8 @@ def city(update, context):
     city = " ".join(context.args)
 
     if city:
+        context.user_data['city'] = city
+
         update.message.reply_text("Я буду показывать погоду для " + city)
     else:
         update.message.reply_text("Введите город после команды, например, /city Лондон")
