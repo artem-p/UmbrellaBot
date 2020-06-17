@@ -53,13 +53,14 @@ def forecast(update, context):
 
     city_from_response = response['city']['name'] + ', ' + response['city']['country']
 
-    forecast_elements = response['list']
+    forecast_elements = response['list'][0:12]
 
     forecast_text = list(map(get_forecast_element, forecast_elements))
 
     logging.info(forecast_text)
 
-    update.message.reply_text("Прогноз погоды для " + city_from_response)        
+    update.message.reply_text("Прогноз погоды для " + city_from_response + '\n' +
+                                ''.join(forecast_text))        
 
 
 def get_forecast_element(forecast_element_json):
@@ -67,7 +68,7 @@ def get_forecast_element(forecast_element_json):
     timestamp = forecast_element_json['dt']
     time = datetime.datetime.fromtimestamp(timestamp).strftime("%H %M")
 
-    return time
+    return time + '\n'
 
 def hello(update, context):
     chat_id = update.effective_chat.id
