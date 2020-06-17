@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler
 import logging
 import requests
+import datetime
 
 from secret import TOKEN, WEATHER_API_KEY
 
@@ -52,8 +53,21 @@ def forecast(update, context):
 
     city_from_response = response['city']['name'] + ', ' + response['city']['country']
 
+    forecast_elements = response['list']
+
+    forecast_text = list(map(get_forecast_element, forecast_elements))
+
+    logging.info(forecast_text)
+
     update.message.reply_text("Прогноз погоды для " + city_from_response)        
 
+
+def get_forecast_element(forecast_element_json):
+    # Получаем текст для элемента прогноза из соответствующего json
+    timestamp = forecast_element_json['dt']
+    time = datetime.datetime.fromtimestamp(timestamp).strftime("%H %M")
+
+    return time
 
 def hello(update, context):
     chat_id = update.effective_chat.id
