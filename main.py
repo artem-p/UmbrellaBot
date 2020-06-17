@@ -21,7 +21,7 @@ def get_city(context):
 def weather(update, context):
     city = get_city(context)
 
-    URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&lang=ru&appid=' + WEATHER_API_KEY
+    URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&lang=ru&units=metric&appid=' + WEATHER_API_KEY
     
     request = requests.get(URL)
 
@@ -29,7 +29,7 @@ def weather(update, context):
 
     city_name = response['name'] + ', ' + response['sys']['country']
 
-    temperature = response['main']['temp'] - 273.15
+    temperature = response['main']['temp']
     wind = response['wind']['speed']
     weather = response['weather'][0]['description']
 
@@ -45,7 +45,7 @@ def weather(update, context):
 def forecast(update, context):
     city = get_city(context)
     
-    URL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&lang=ru&appid=' + WEATHER_API_KEY
+    URL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&lang=ru&units=metric&appid=' + WEATHER_API_KEY
 
     request = requests.get(URL)
 
