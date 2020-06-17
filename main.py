@@ -54,9 +54,7 @@ def forecast(update, context):
 
     forecast_text = list(map(get_forecast_element, forecast_elements))
 
-    logging.info(forecast_text)
-
-    update.message.reply_text("Прогноз погоды для " + city_from_response + '\n' +
+    update.message.reply_text("Прогноз погоды для " + city_from_response + '\n\n' +
                                 ''.join(forecast_text))        
 
 
