@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler
 import logging
 import requests
 import datetime
-import weather
+from weather import Weather
 
 from secret import TOKEN, WEATHER_API_KEY
 
@@ -19,28 +19,24 @@ def get_city(context):
     return city
 
 
-def weather(update, context):
+def current_weather(update, context):
     city = get_city(context)
 
     URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&lang=ru&units=metric&appid=' + WEATHER_API_KEY
     
     request = requests.get(URL)
-
     response = request.json()
 
-    city_name = response['name'] + ', ' + response['sys']['country']
-
+    city_from_response = response['name'] + ', ' + response['sys']['country']
+    timestamp = response['dt']
     temperature = response['main']['temp']
-    wind = response['wind']['speed']
-    weather = response['weather'][0]['description']
+    wind_speed = response['wind']['speed']
+    phenomena = response['weather'][0]['description']
 
-    temperature_output = weather.format_temperature(temperature)
-    wind_output = str(wind) + ' м/с'
-
-    message = 'Погода в ' + city_name + ':\n\n' + 'Температура ' + temperature_output + '\n' + 'Ветер ' + wind_output + '\n' + weather.capitalize()
+    current_weather = Weather(city_from_response, timestamp, temperature, wind_speed, phenomena)
 
     chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id=chat_id, text=message)
+    context.bot.send_message(chat_id=chat_id, text=current_weather.as_current_weather())
 
 
 def forecast(update, context):
@@ -73,10 +69,6 @@ def get_forecast_element(forecast_element_json):
 
     return time + '\n' + temperature_output + '\n\n'
 
-def hello(update, context):
-    chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id=chat_id, text='Привет')
-
 
 def city(update, context):
     city = " ".join(context.args)
@@ -96,8 +88,7 @@ def main():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
     
-    dispatcher.add_handler(CommandHandler('hello', hello))
-    dispatcher.add_handler(CommandHandler('weather', weather))
+    dispatcher.add_handler(CommandHandler('weather', current_weather))
     dispatcher.add_handler(CommandHandler('forecast', forecast))
     dispatcher.add_handler(CommandHandler('city', city))
 
