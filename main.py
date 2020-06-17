@@ -63,11 +63,13 @@ def forecast(update, context):
 def get_forecast_element(forecast_element_json):
     # Получаем текст для элемента прогноза из соответствующего json
     timestamp = forecast_element_json['dt']
-    time = datetime.datetime.fromtimestamp(timestamp).strftime("%H %M")
     temperature = forecast_element_json['main']['temp']
-    temperature_output = weather.format_temperature(temperature)
+    wind_speed = forecast_element_json['wind']['speed']
+    phenomena = forecast_element_json['weather'][0]['main']
 
-    return time + '\n' + temperature_output + '\n\n'
+    weather = Weather('', timestamp, temperature, wind_speed, phenomena)
+
+    return weather.as_forecast_element()
 
 
 def city(update, context):
