@@ -4,13 +4,20 @@ import requests
 from secret import TOKEN, WEATHER_API_KEY
 
 
-def weather(update, context):
+def get_city(context):
+    # Получаем город, который ввел пользователь или отдаем по умолчанию
     DEFAULT_CITY = 'Saint Petersburg, ru'
 
     try:
         city = context.user_data['city']
     except KeyError:
         city = DEFAULT_CITY
+
+    return city
+
+
+def weather(update, context):
+    city = get_city(context)
 
     URL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&lang=ru&appid=' + WEATHER_API_KEY
     
@@ -34,7 +41,9 @@ def weather(update, context):
 
 
 def forecast(update, context):
-    update.message.reply_text("Прогноз погоды для ")        
+    city = get_city(context)
+
+    update.message.reply_text("Прогноз погоды для " + city)        
 
 
 def hello(update, context):
