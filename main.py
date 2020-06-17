@@ -2,6 +2,7 @@ from telegram.ext import Updater, CommandHandler
 import logging
 import requests
 import datetime
+import weather
 
 from secret import TOKEN, WEATHER_API_KEY
 
@@ -33,7 +34,7 @@ def weather(update, context):
     wind = response['wind']['speed']
     weather = response['weather'][0]['description']
 
-    temperature_output = '{:.0f}'.format(temperature) + ' °C'
+    temperature_output = weather.format_temperature(temperature)
     wind_output = str(wind) + ' м/с'
 
     message = 'Погода в ' + city_name + ':\n\n' + 'Температура ' + temperature_output + '\n' + 'Ветер ' + wind_output + '\n' + weather.capitalize()
@@ -68,7 +69,7 @@ def get_forecast_element(forecast_element_json):
     timestamp = forecast_element_json['dt']
     time = datetime.datetime.fromtimestamp(timestamp).strftime("%H %M")
     temperature = forecast_element_json['main']['temp']
-    temperature_output = '{:.0f}'.format(temperature) + ' °C'
+    temperature_output = weather.format_temperature(temperature)
 
     return time + '\n' + temperature_output + '\n\n'
 
