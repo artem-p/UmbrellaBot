@@ -1,4 +1,5 @@
 from telegram.ext import Updater, CommandHandler
+import logging
 import requests
 
 from secret import TOKEN, WEATHER_API_KEY
@@ -42,8 +43,16 @@ def weather(update, context):
 
 def forecast(update, context):
     city = get_city(context)
+    
+    URL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&lang=ru&appid=' + WEATHER_API_KEY
 
-    update.message.reply_text("Прогноз погоды для " + city)        
+    request = requests.get(URL)
+
+    response = request.json()
+
+    city_from_response = response['city']['name'] + ', ' + response['city']['country']
+
+    update.message.reply_text("Прогноз погоды для " + city_from_response)        
 
 
 def hello(update, context):
@@ -65,6 +74,9 @@ def city(update, context):
 def main():
     updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
+
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                     level=logging.INFO)
     
     dispatcher.add_handler(CommandHandler('hello', hello))
     dispatcher.add_handler(CommandHandler('weather', weather))
