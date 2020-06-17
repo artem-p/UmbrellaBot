@@ -33,7 +33,7 @@ def weather(update, context):
     wind = response['wind']['speed']
     weather = response['weather'][0]['description']
 
-    temperature_output = '{:.0f}'.format(temperature) + '° C'
+    temperature_output = '{:.0f}'.format(temperature) + ' °C'
     wind_output = str(wind) + ' м/с'
 
     message = 'Погода в ' + city_name + ':\n\n' + 'Температура ' + temperature_output + '\n' + 'Ветер ' + wind_output + '\n' + weather.capitalize()
@@ -67,8 +67,10 @@ def get_forecast_element(forecast_element_json):
     # Получаем текст для элемента прогноза из соответствующего json
     timestamp = forecast_element_json['dt']
     time = datetime.datetime.fromtimestamp(timestamp).strftime("%H %M")
+    temperature = forecast_element_json['main']['temp']
+    temperature_output = '{:.0f}'.format(temperature) + ' °C'
 
-    return time + '\n'
+    return time + '\n' + temperature_output + '\n\n'
 
 def hello(update, context):
     chat_id = update.effective_chat.id
